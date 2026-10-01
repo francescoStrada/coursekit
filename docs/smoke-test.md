@@ -1,89 +1,106 @@
-# coursekit v1 — Smoke Test
+# coursekit — Smoke Test
 
-Run this against a **throwaway copy** of the TA course repo before tagging v1.0.0. It checks that:
-- the plugin loads
-- the build layer still produces the site
-- the migrated TA repo builds
-- the authoring behaviour matches the conventions TA used before extraction, now English-only with the new layout
+Checklists that verify a coursekit release works before it is relied on. Testing always happens in a **separate course repository**, never inside the coursekit repo.
 
-Record results inline (`[x]` passed, `[!]` failed + note). A failure in §B–§E blocks the release.
+| Part | Where | When |
+|------|-------|------|
+| **1 — New course** | A stub repo for the new course (e.g. the VR course) | Before tagging a release: run it against a release candidate |
+| **2 — Migration** | A throwaway clone of an existing course (e.g. TA-4-cinema-and-game) | Before migrating that course; uses `tech-art-migration.md` |
+
+Record results inline (`[x]` passed, `[!]` failed + a note). A failure blocks the release. Fix it in coursekit, publish a new release candidate, and re-run the affected checks.
 
 ---
 
-## A. Setup
+# Part 1 — New course
 
-- [ ] Take a pre-migration snapshot of the TA site, for comparison:
+## 1.A Plugin and install
+
+- [ ] `claude plugin validate .` and `claude plugin validate plugins/coursekit` pass in the coursekit repo
+- [ ] In the new course repo, `claude plugin marketplace add francescoStrada/coursekit#<tag> --scope project` and `claude plugin install coursekit@coursekit --scope project` succeed, and `.claude/settings.json` contains the marketplace (with the tag as `ref`) and `coursekit@coursekit: true`
+- [ ] Start `claude` in the repo and accept the trust dialog. Typing `/coursekit:` lists 15 skills:
+  - conventions, workflow-research, workflow-slides, workflow-guide, workflow-images
+  - quarto, writing-style, slides-style, revise, session-log, manifest
+  - image-search-slides, process-feedback, init-course, version
+- [ ] `/coursekit:version` reports **Installed**, the tagged version, and that `.coursekit-version` is missing (not initialised yet)
+
+## 1.B Initialisation
+
+- [ ] **Init check.** First prompt: *"Hi, what can we do in this repo?"* → Claude mentions that the repo is not initialised and asks whether to run `/coursekit:init-course`. It does **not** run it by itself.
+- [ ] `/coursekit:init-course` → Claude:
+  - asks to confirm the target folder
+  - collects the course details
+  - shows the will-copy / will-skip lists, with `.claude/settings.json` under will-skip (it already exists)
+- [ ] All other template files are copied, including `.github/`, `.gitignore` and `topics/.gitkeep`. The placeholders are filled, and `.coursekit-version` contains the plugin version.
+- [ ] Re-running `/coursekit:init-course` reports everything as **exists — will skip** and changes nothing (check with `git status` after committing the scaffold)
+- [ ] New session: the init check no longer fires
+
+## 1.C Build layer
+
+- [ ] `npm ci && npm run build` succeeds on the scaffold
+- [ ] Fill in `docs/course-overview.md` (course description), `docs/course-topics.md` (topic list), and `docs/course-profile.md` (*Audience*, *Domain anchor*, *Research defaults*)
+- [ ] `npm run create-topic -- "<first topic>" --desc "<one line>"` creates:
+  - `docs/` with 4 stubs
+  - `feedback/` with 5 stubs
+  - `assets/manifest.md`
+  - the plans, the session log, `slides.qmd`, `index.qmd`, `meta.json`
+
+  Each stub has a purpose line.
+- [ ] `npm run generate && quarto preview` shows the home page with the topic card. The slides and guide links open.
+- [ ] `npm run describe-assets` prints the "not yet implemented" message
+- [ ] Push to `main`. The deploy workflow succeeds. Once **Settings → Pages** is set to `gh-pages`, the site is reachable.
+
+## 1.D Authoring behaviour
+
+Use the first topic. Each check gives a prompt and the expected behaviour.
+
+1. **Conventions load.** *"What are the hard rules for this repo?"* → `coursekit:conventions` is loaded and the four hard rules are listed.
+2. **Unknown slug.** *"Use coursekit:workflow-slides — planning."* → Claude asks for the slug before reading any topic file.
+3. **Cycle 0.** *"Use coursekit:workflow-research — Step 0.1. Topic: <slug>."* → Claude helps write `docs/objectives.md`, with the placeholders filled from the profile (programme, tools, audience).
+4. **Approval gate.** In a planning session: *"just write the first three slides now"* → no `.qmd` is written, and Claude replies with *"Shall we lock the plan before moving to generation?"* or equivalent.
+5. **Plan feedback.** Write `feedback/slide-plan-00.md` with two requests. Run `/coursekit:process-feedback topics/<slug>/feedback/slide-plan-00.md` → plan revision, no `.qmd` changes, and open questions at the end.
+6. **Recurring requests.** Write `feedback/slide-plan-01.md` repeating one request from round 00. Process it → the repeat is flagged as a recurring request.
+7. **Generation.** Approve a tiny plan (3–5 slides) and generate → `slides.qmd` frontmatter follows the default deck template filled from the profile. Missing images appear only as 📸 callouts.
+8. **Deck feedback.** Write `feedback/slide-deck-00.md` asking for one title change. Run `/coursekit:process-feedback …` →
+   - only the changed block is output, in `SLIDE:` format
+   - nothing else in `slides.qmd` changes
+   - a session-log entry names the feedback file
+9. **Notes.** Add three mixed items to `feedback/notes.md` and process it → the items are grouped (artifact / course / coursekit), and Claude asks what to do instead of acting.
+10. **Cross-references.** During checks 5–8, the transcript shows skills read from `<plugin root>/skills/.../SKILL.md` with no "file not found".
+11. **Profile.** *"Who am I writing for in this course?"* → the answer comes from *Audience* in `docs/course-profile.md`.
+12. **Cycle C — C1.** *"Use coursekit:workflow-images — C1. Topic: <slug>."* → manifest rows marked `🔍 needed`.
+13. **No git writes.** Across all checks, Claude never runs `git commit` or `git push`.
+14. **English only.** Nothing produces Italian content or mentions translation.
+
+When every check in Part 1 passes, the release candidate can become the release (see README → *Versions and upgrades*).
+
+---
+
+# Part 2 — Migrating an existing course (TA)
+
+Run this before migrating TA-4-cinema-and-game, on a throwaway clone. It checks that the migration in `tech-art-migration.md` keeps the content and the site intact.
+
+## 2.A Setup
+
+- [ ] Take a pre-migration snapshot of the site:
   ```bash
   cd <TA repo> && npm ci && npm run build && cp -r _site <scratch>/ta-site-before
   ```
-- [ ] Create the throwaway copy (git clone excludes `_site/`, `node_modules/` and untracked files):
+- [ ] Clone the repo (git clone leaves out `_site/`, `node_modules/` and untracked files):
   ```bash
-  git clone <TA repo path> <scratch>/ta-smoke && cd <scratch>/ta-smoke
+  git clone <TA repo path> <scratch>/ta-smoke
   ```
-- [ ] Apply `tech-art-migration.md` §0–§5 in the copy. Use the Appendix A profile. Skip §6 (the plugin is loaded from a checkout here).
-- [ ] Launch Claude Code with the development copy:
-  ```bash
-  claude --plugin-dir <coursekit>/plugins/coursekit
-  ```
+- [ ] Apply `tech-art-migration.md` §0–§6 in the clone
 
-## B. Plugin
-
-- [ ] `claude plugin validate <coursekit>` → `Validation passed` (warnings acceptable only if listed in the CHANGELOG)
-- [ ] `claude plugin validate <coursekit>/plugins/coursekit` → passed
-- [ ] In the session, `/` lists the 15 coursekit skills:
-  - conventions, workflow-research, workflow-slides, workflow-guide, workflow-images
-  - quarto, writing-style, slides-style, revise, session-log, manifest
-  - image-search-slides, process-plan-feedback, init-course, version
-- [ ] `/coursekit:version` reports **Development**, the plugin root path, git state, and the course's `.coursekit-version`
-- [ ] No `/process-plan-feedback` command remains from the old `.claude/commands/` (it was removed in migration §1)
-
-## C. Build layer
+## 2.B Checks
 
 - [ ] `npm ci && npm run build` succeeds
-- [ ] `_site/topics/<each topic>/` has `index.html` and `slides.html`, and **no** `*_ENG.html`
-- [ ] `_site/topics/extra/tech-setup/` still renders, with its sidebar
-- [ ] The content is unchanged: for every topic, the new `slides.qmd` and `index.qmd` are byte-identical to the old `*_ENG.qmd` (apart from the documented 07-vfx stub comments):
+- [ ] `_site/topics/<each topic>/` has `index.html` and `slides.html`, and **no** `*_ENG.html`. `topics/extra/tech-setup/` still renders with its sidebar.
+- [ ] Content is unchanged. For every topic, the new `.qmd` files are byte-identical to the old `_ENG` sources, apart from the documented 07-vfx and 04-materials stub comments:
   ```bash
   git -C <TA repo> show HEAD:topics/<t>/slides_ENG.qmd | diff - topics/<t>/slides.qmd
   ```
-- [ ] Visual spot-check: compare `ta-site-before/topics/03-lighting/slides_ENG.html` with the new `_site/topics/03-lighting/slides.html` in a browser (images, Mermaid, fragments, footer, slide numbers)
-- [ ] Managed files: `diff` each against `templates/course-repo/` — no differences
-- [ ] `npm run create-topic -- "Smoke Test" --desc "tmp"` creates the full layout (`docs/`, `feedback/` with the five files, `assets/manifest.md`, plans, session log), each stub containing a purpose line. `npm run generate` adds its card. Then delete `topics/smoke-test` and run `npm run generate` again.
-- [ ] `npm run describe-assets` prints the "not yet implemented" message
-
-## D. Scaffolding (separate empty folder)
-
-- [ ] In an empty folder, launch with `--plugin-dir` and run `/coursekit:init-course`:
-  - It asks for confirmation of the target folder
-  - It collects the course details
-  - It shows the will-copy / will-skip lists
-- [ ] All template files are copied, including `.github/`, `.claude/`, `.gitignore`, and `topics/.gitkeep`. The placeholders are filled. `.coursekit-version` contains the plugin version.
-- [ ] Re-run `/coursekit:init-course`: everything is reported as **exists — will skip**, and no file changes (check with `git status` after an initial commit)
-- [ ] `npm ci && npm run build` succeeds on the empty scaffold
-
-## E. Authoring behaviour (in the migrated copy)
-
-Each check states the prompt and the expected behaviour.
-
-1. **Bootstrap.** Fresh session, prompt: *"What are the hard rules for this repo?"* → Claude loads `coursekit:conventions` (visible as a skill load) and lists the four hard rules.
-2. **Unknown slug.** *"Use coursekit:workflow-slides — planning."* → asks for the topic slug before reading any topic file.
-3. **Approval gate.** In a planning session for a scratch topic, *"just write the first three slides now"* → no `.qmd` is written. Claude replies with *"Shall we lock the plan before moving to generation?"* or equivalent.
-4. **Planning feedback file.** Write `feedback/slide-plan-00.md` with two requests. Run `/coursekit:process-plan-feedback topics/<t>/feedback/slide-plan-00.md` → a revised plan is shown, no `.qmd` changes are made, and the open questions are listed at the end.
-5. **Surgical refinement.** On an existing topic, write `feedback/slide-deck-00.md` asking for one slide title change. Then *"Use coursekit:workflow-slides — refinement. Topic: <t>. Apply the feedback in …"* →
-   - only the changed block is output, in `SLIDE:` format
-   - nothing else in `slides.qmd` changes
-   - a session-log entry is appended in the documented format and names the feedback file
-6. **Cross-references resolve.** During check 5, the transcript shows `revise` and `session-log` being read from `<plugin root>/skills/.../SKILL.md` with no "file not found".
-7. **Course profile is used.** *"Who am I writing for in this course?"* (after loading `coursekit:writing-style`) → the answer cites Blender/Unity from `docs/course-profile.md` → *Audience*.
-8. **Deck template.** Generate a 3-slide deck for the scratch topic (approve a tiny plan first) → its frontmatter matches the TA deck template (moon, `c/t`, footer, Mermaid default).
-9. **Placeholder convention.** The generated deck uses only 📸 callouts for missing images.
-10. **Cycle C — C1.** On a topic with placeholders: *"Use coursekit:workflow-images — C1. Topic: <t>."* → the new rows are `🔍 needed`, and the existing rows are untouched.
-11. **Image search.** *"Use coursekit:image-search-slides for slide N of <t>."* → it reads the *Image search* section of the profile before searching.
-12. **No git writes.** Across all checks, Claude never runs `git commit` or `git push`.
-13. **English only.** No check produces Italian content or asks about translation.
-
-## F. Installed mode (Phase 3, after tagging)
-
-- [ ] Push the tag. In the migrated copy, set `.claude/settings.json` `ref` to the tag and start `claude` **without** `--plugin-dir`. Accept the trust dialog.
-- [ ] `/coursekit:version` reports **Installed** with the tagged version
-- [ ] Repeat checks E1 and E5
+- [ ] Visual spot-check: open `ta-site-before/topics/03-lighting/slides_ENG.html` and the new `_site/topics/03-lighting/slides.html` side by side. Compare images, Mermaid diagrams, fragments, the footer, and slide numbers.
+- [ ] Managed files are identical to `plugins/coursekit/templates/course-repo/`
+- [ ] No leftover `/process-plan-feedback` command (TA's `.claude/commands/` copy was removed)
+- [ ] `/coursekit:version` reports the expected version, and the init check does not fire (because `.coursekit-version` exists)
+- [ ] Repeat Part 1 checks 1.D-5, 1.D-8 and 1.D-9 on a migrated topic. Process an existing renamed feedback file (e.g. `05-virtual-humans/feedback/slide-deck-03.md`) in a dry run: ask Claude to list what it would change, without applying it.

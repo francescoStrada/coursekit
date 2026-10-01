@@ -99,7 +99,7 @@ These scripts are managed coursekit files. Do not edit them in the course repo.
 | `coursekit:workflow-guide` | Full Cycle B instructions (plan + generate + refine guide) |
 | `coursekit:workflow-images` | Full Cycle C instructions (manifest + source + describe + place) |
 | `coursekit:image-search-slides` | Finding remote image URLs for slide placeholders |
-| `coursekit:process-plan-feedback` | Processing a planning feedback file |
+| `coursekit:process-feedback` | Processing any feedback file (plans, deck, guide, notes) |
 | `coursekit:init-course` | Scaffolding a new course repository |
 | `coursekit:version` | Checking which coursekit copy and version is loaded |
 
@@ -116,17 +116,17 @@ Before any content cycle begins, **Cycle 0 (Research)** must be complete. The co
 - **High-level mode**: you provide learning objectives, key concepts, and target lecture duration. Claude Code proposes the full slide structure autonomously — number of slides, titles, sequencing — and you react to it.
 - **Collaborative mode**: you bring specific slide ideas, possibly unordered. You discuss structure and sequencing together, and Claude Code proposes a final arrangement.
 
-The output is `plan-slides.md`. **Claude Code must not generate any qmd content until the plan is explicitly approved.** Planning feedback can be given in `feedback/slide-plan-NN.md` and processed with `/coursekit:process-plan-feedback`.
+The output is `plan-slides.md`. **Claude Code must not generate any qmd content until the plan is explicitly approved.** Planning feedback can be given in `feedback/slide-plan-NN.md` and processed with `/coursekit:process-feedback`.
 
 **A2. Generation (Opus).** Once `plan-slides.md` is approved, Claude Code generates `slides.qmd` in one session, following `writing-style`, `slides-style`, and `quarto`, and inserting 📸 image placeholder callouts wherever visuals would strengthen the content.
 
-**A3. Refinement (Sonnet).** Review the slides in Quarto preview, then refine surgically, either by naming a target or by writing `feedback/slide-deck-NN.md`. Repeat as many times as needed. Cycle A is complete when you say so.
+**A3. Refinement (Sonnet).** Review the slides in Quarto preview, then refine surgically, either by naming a target or by writing `feedback/slide-deck-NN.md` and processing it with `/coursekit:process-feedback`. Repeat as many times as needed. Cycle A is complete when you say so.
 
 ### Cycle B — Guide
 
 Cycle B begins only when the slides are substantially complete. The guide is not a prose version of the slides. It is a resource map that expands on the slide structure with deeper explanation, tutorial references, and documentation pointers, each with a brief note on why it matters and what students should look for.
 
-**B1. Planning (Sonnet)** produces `plan-guide.md` (feedback in `feedback/guide-plan-NN.md`). **B2. Generation (Opus)** produces `index.qmd`. **B3. Refinement (Sonnet)** works the same way as Cycle A refinement (feedback in `feedback/guide-doc-NN.md`).
+**B1. Planning (Sonnet)** produces `plan-guide.md` (feedback in `feedback/guide-plan-NN.md`). **B2. Generation (Opus)** produces `index.qmd`. **B3. Refinement (Sonnet)** works the same way as Cycle A refinement (feedback in `feedback/guide-doc-NN.md`). Every feedback file, whatever its type, goes through `/coursekit:process-feedback`, which also checks earlier rounds for recurring requests.
 
 ### Cycle C — Images
 
@@ -217,15 +217,15 @@ docs/objectives.md and docs/research-*.md are ready.
 Use coursekit:workflow-slides — generation. Topic: [slug]. plan-slides.md is approved.
 ```
 
-**Planning feedback (either cycle):**
+**Any feedback file (slide-plan, slide-deck, guide-plan, guide-doc, notes):**
 ```
-/coursekit:process-plan-feedback topics/[slug]/feedback/slide-plan-NN.md
+/coursekit:process-feedback topics/[slug]/feedback/<type>-NN.md
 ```
 
-**Cycle A or B — Refinement:**
+**Cycle A or B — Refinement with a named target:**
 ```
 Use coursekit:workflow-slides — refinement. Topic: [slug].
-Apply the feedback in topics/[slug]/feedback/slide-deck-NN.md.
+Target: [slide number or title]. Change: [description].
 ```
 
 **Cycle B — Planning:**

@@ -1,6 +1,6 @@
 # Migrating TA-4-cinema-and-game onto coursekit v1
 
-A checklist for moving the Technical Art course repo from its in-repo framework (`CLAUDE.md` + `skills/` + `docs/`) onto the coursekit plugin. Run it first on a **throwaway copy** (see `smoke-test.md`), then for real at the start of the semester.
+A checklist for moving the Technical Art course repo from its in-repo framework (`CLAUDE.md` + `skills/` + `docs/`) onto the coursekit plugin. Run it first on a **throwaway copy** (see `smoke-test.md` Part 2), then for real at the start of the semester.
 
 Facts this checklist relies on (verified 2026-10-01):
 
@@ -22,7 +22,7 @@ Facts this checklist relies on (verified 2026-10-01):
 - [ ] `skills/` (all 12 files) — replaced by the coursekit skills
 - [ ] `docs/claude-code-workflow-manual.md` — replaced by `coursekit:conventions` → workflow-manual
 - [ ] `docs/documentation-overview.md` — replaced by `coursekit:conventions` → documentation-map
-- [ ] `.claude/commands/process-plan-feedback.md` — replaced by `/coursekit:process-plan-feedback`
+- [ ] `.claude/commands/process-plan-feedback.md` — replaced by `/coursekit:process-feedback` (handles every feedback type, not only plans)
 - [ ] Empty leftovers at the root: `assets/`, `CLAUDE_files/`
 - [ ] Keep: `docs/course-overview.md`, `docs/Esame-Finale.md`, `_overall-notes.md` (author notes), `.claude/settings.local.json` (personal)
 
@@ -108,7 +108,7 @@ Replace each file with the coursekit template copy:
 - [ ] `npm ci && npm run build` succeeds
 - [ ] `_site/topics/*/` contains `index.html` and `slides.html` and **no** `*_ENG.html`
 - [ ] Spot-check three topics in `quarto preview`: images, Mermaid diagrams, and the slide links from the home page
-- [ ] Run the behaviour checks in `smoke-test.md` §E
+- [ ] Run `smoke-test.md` Part 2
 - [ ] Commit (`coursekit v1 migration`) and push. The site redeploys in English.
 
 ---

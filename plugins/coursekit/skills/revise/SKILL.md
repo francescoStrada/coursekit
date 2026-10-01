@@ -23,7 +23,7 @@ Read this skill for any refinement session — targeted edits to `slides.qmd` or
 
 ## Feedback Files
 
-When the author points to a feedback file (`feedback/slide-deck-NN.md` or `feedback/guide-doc-NN.md`), read it in full and treat each item in it as a refinement request. Apply the rules above to every item. Ask for clarification only if an item is genuinely ambiguous.
+When the author points to a feedback file (`feedback/slide-deck-NN.md` or `feedback/guide-doc-NN.md`), process it following `${CLAUDE_PLUGIN_ROOT}/skills/process-feedback/SKILL.md`. Apply the rules above to every item.
 
 ---
 

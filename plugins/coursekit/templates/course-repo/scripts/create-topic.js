@@ -143,13 +143,13 @@ Cycles A, B, C not yet started.
   'feedback/notes.md': mdStub(`Notes — ${title}`,
     'Running notes that come up while working on this topic. Not a feedback round.'),
   'feedback/slide-plan-00.md': mdStub(`Feedback — Slide Plan 00`,
-    'First round of written feedback on plan-slides.md. Process it with /coursekit:process-plan-feedback. Next rounds: slide-plan-01.md, 02, …'),
+    'First round of written feedback on plan-slides.md. Process it with /coursekit:process-feedback. Next rounds: slide-plan-01.md, 02, …'),
   'feedback/slide-deck-00.md': mdStub(`Feedback — Slide Deck 00`,
-    'First round of written feedback on slides.qmd, applied in Cycle A refinement. Next rounds: slide-deck-01.md, 02, …'),
+    'First round of written feedback on slides.qmd, applied in Cycle A refinement with /coursekit:process-feedback. Next rounds: slide-deck-01.md, 02, …'),
   'feedback/guide-plan-00.md': mdStub(`Feedback — Guide Plan 00`,
-    'First round of written feedback on plan-guide.md. Process it with /coursekit:process-plan-feedback. Next rounds: guide-plan-01.md, 02, …'),
+    'First round of written feedback on plan-guide.md. Process it with /coursekit:process-feedback. Next rounds: guide-plan-01.md, 02, …'),
   'feedback/guide-doc-00.md': mdStub(`Feedback — Guide Doc 00`,
-    'First round of written feedback on index.qmd, applied in Cycle B refinement. Next rounds: guide-doc-01.md, 02, …'),
+    'First round of written feedback on index.qmd, applied in Cycle B refinement with /coursekit:process-feedback. Next rounds: guide-doc-01.md, 02, …'),
 
   // assets/
   'assets/manifest.md': mdStub(`Image Manifest — ${title}`,

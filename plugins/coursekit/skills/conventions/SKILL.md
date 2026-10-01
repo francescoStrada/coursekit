@@ -134,7 +134,7 @@ Load skills explicitly when their task is relevant. Do not guess at skill conten
 | `coursekit:session-log` | End of every session |
 | `coursekit:manifest` | Building or updating the image manifest |
 | `coursekit:image-search-slides` | Finding remote image URLs for slide placeholders during Cycle A refinement |
-| `coursekit:process-plan-feedback` | Processing an author feedback file from `feedback/` |
+| `coursekit:process-feedback` | Processing any author feedback file from `feedback/` (plans, deck, guide, notes) |
 | `coursekit:init-course` | Scaffolding a new course repository (run once) |
 | `coursekit:version` | Checking which coursekit copy and version is loaded |
 
@@ -142,11 +142,23 @@ Course-specific skills may live in the course repo's `.claude/skills/`. If one i
 
 ---
 
+## Initialisation Check
+
+`.coursekit-version` at the repository root is the flag that `coursekit:init-course` has been run in this repo. At the start of every session, check whether it exists. If it is missing:
+
+- Tell the author that this repo does not appear to have been initialised with coursekit.
+- Ask whether they want to run `/coursekit:init-course`.
+- **Never run `init-course` yourself**, and never scaffold or copy template files without an explicit request. The author always starts it.
+
+If the author says the repo was set up by hand or migrated, suggest creating `.coursekit-version` with the coursekit version in use, so the check stops firing.
+
+---
+
 ## Session Continuity
 
 Claude Code has no memory between sessions. At the start of every session:
 
-1. Load this skill (the course repo's `CLAUDE.md` is already in context)
+1. Load this skill (the course repo's `CLAUDE.md` is already in context) and run the initialisation check above
 2. Read `docs/course-overview.md` if course-level context is needed
 3. Read `topics/[slug]/session-log.md` to understand current state
 4. Read the relevant plan document (`plan-slides.md` or `plan-guide.md`) for the active cycle
@@ -167,7 +179,7 @@ The author writes feedback in files under `topics/[slug]/feedback/` instead of t
 | `guide-doc-NN.md` | `index.qmd` |
 | `notes.md` | Running notes from working on the topic — not a feedback round |
 
-`NN` is a two-digit sequence starting at `00`. When the author points to a feedback file, read it in full and treat it as the author's feedback for the current session. `coursekit:process-plan-feedback` handles the planning case.
+`NN` is a two-digit sequence starting at `00`. When the author points to a feedback file, read it in full and treat it as the author's feedback for the current session. `coursekit:process-feedback` processes every type: plan feedback leads to a plan revision, deck and guide feedback to surgical refinement, and `notes.md` to a review.
 
 ---
 

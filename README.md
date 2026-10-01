@@ -57,7 +57,7 @@ Everything is authored and rendered in English.
 | `workflow-slides` / `workflow-guide` / `workflow-images` | Cycles A / B / C |
 | `quarto`, `writing-style`, `slides-style` | Syntax and style defaults (courses override in `course-profile.md`) |
 | `revise`, `session-log`, `manifest`, `image-search-slides` | Refinement, continuity, images |
-| `process-plan-feedback` | Process a planning feedback file (`/coursekit:process-plan-feedback <file>`) |
+| `process-feedback` | Process any feedback file — plans, deck, guide, notes (`/coursekit:process-feedback <file>`) |
 | `init-course` | Scaffold a new course repo (`/coursekit:init-course`) |
 | `version` | Show the loaded coursekit copy and version (`/coursekit:version`) |
 
@@ -88,11 +88,16 @@ The course repo's `CLAUDE.md` makes Claude load `coursekit:conventions` first, s
 
 ```
 Use coursekit:workflow-slides — planning. Topic: 03-lighting. Assignment: 1. Session duration: 1.5h.
-/coursekit:process-plan-feedback topics/03-lighting/feedback/slide-plan-01.md
-Use coursekit:workflow-slides — refinement. Topic: 03-lighting. Apply the feedback in topics/03-lighting/feedback/slide-deck-00.md.
+/coursekit:process-feedback topics/03-lighting/feedback/slide-plan-01.md
+/coursekit:process-feedback topics/03-lighting/feedback/slide-deck-00.md
 ```
 
-Write feedback in the numbered `feedback/` files rather than in the prompt. It arrives complete and considered, and the history shows recurring requests. The full set of openers is in `plugins/coursekit/skills/conventions/workflow-manual.md`.
+Write feedback in the numbered `feedback/` files rather than in the prompt. It arrives complete and considered, and the history shows recurring requests. `/coursekit:process-feedback` handles every feedback type:
+- plan feedback → a plan revision
+- deck and guide feedback → surgical refinement
+- `notes.md` → a review
+
+It also flags requests that keep recurring across rounds. The full set of openers is in `plugins/coursekit/skills/conventions/workflow-manual.md`.
 
 ---
 

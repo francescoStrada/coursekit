@@ -20,8 +20,14 @@ First release, extracted from the Technical Art course repo (TA-4-cinema-and-gam
   - `quarto`, `writing-style`, `slides-style`
   - `revise`, `session-log`, `manifest`, `image-search-slides`
 - `conventions` skill: the generic content of TA's `CLAUDE.md`, plus `workflow-manual.md` and `documentation-map.md` (from TA's `docs/`)
-- `process-plan-feedback` skill (from TA's `.claude/commands/`), extended with the purpose of written feedback files
-- `init-course` skill: copy-only scaffold of a course repo with placeholder filling and a `.coursekit-version` stamp
+- `process-feedback` skill. It replaces TA's plan-only `/process-plan-feedback` command and processes every feedback type:
+  - `slide-plan` / `guide-plan` → plan revision
+  - `slide-deck` / `guide-doc` → surgical refinement
+  - `notes.md` → a review
+
+  It also flags requests that recur across rounds.
+- `init-course` skill: copy-only scaffold of a course repo with placeholder filling and a `.coursekit-version` stamp. It runs only on explicit request.
+- Initialisation check in `conventions`: if `.coursekit-version` is missing, Claude asks whether to run `/coursekit:init-course` and never runs it on its own
 - `version` skill: reports the loaded copy and version, compares it with the course's pin, and prints launch commands
 - `templates/course-repo/`:
   - managed build files (`scripts/`, `package.json`, `package-lock.json`, `styles.css`, `.gitignore`, `.github/workflows/deploy.yml`)

@@ -8,6 +8,10 @@ disable-model-invocation: true
 
 Scaffold the current working directory as a coursekit course repository. This is a copy-only operation: it never overwrites an existing file, never deletes anything, and never commits.
 
+**Only run this skill when the author explicitly asks for it** (typing `/coursekit:init-course`, or answering yes when `coursekit:conventions` asks). Never start it on your own initiative.
+
+The `.coursekit-version` file it writes (step 6) is the flag that tells later sessions the course has been initialised.
+
 Templates directory: `${CLAUDE_PLUGIN_ROOT}/templates/course-repo/`
 Plugin manifest (for the version): `${CLAUDE_PLUGIN_ROOT}/.claude-plugin/plugin.json`
 

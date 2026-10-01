@@ -66,7 +66,7 @@ When proposing a slide structure, present it as a numbered list with titles and 
 
 ### Feedback rounds
 
-The author may give planning feedback as a file, `topics/[slug]/feedback/slide-plan-NN.md`, instead of in the prompt. Process it with `coursekit:process-plan-feedback`: stay in planning, revise the plan, and list any open questions.
+The author may give planning feedback as a file, `topics/[slug]/feedback/slide-plan-NN.md`, instead of in the prompt. Process it following `${CLAUDE_PLUGIN_ROOT}/skills/process-feedback/SKILL.md` (the author may also run `/coursekit:process-feedback <file>`): stay in planning, revise the plan, and list any open questions.
 
 ### Output: plan-slides.md
 
@@ -164,7 +164,7 @@ Target: [slide number or title]. Change: [description].
 Apply the feedback in topics/[slug]/feedback/slide-deck-NN.md.
 ```
 
-Read `topics/[slug]/session-log.md` and `topics/[slug]/slides.qmd`, then follow `${CLAUDE_PLUGIN_ROOT}/skills/revise/SKILL.md`. When the author points to a `slide-deck-NN.md` feedback file, read it in full and treat every item in it as a refinement request. Ask for clarification only if an item is genuinely ambiguous.
+Read `topics/[slug]/session-log.md` and `topics/[slug]/slides.qmd`, then follow `${CLAUDE_PLUGIN_ROOT}/skills/revise/SKILL.md`. When the author points to a `slide-deck-NN.md` feedback file, process it following `${CLAUDE_PLUGIN_ROOT}/skills/process-feedback/SKILL.md`. It treats every item as a refinement request and checks earlier rounds for recurring requests.
 
 ### Refinement rules
 
