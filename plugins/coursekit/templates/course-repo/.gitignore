@@ -1,0 +1,7 @@
+# managed by coursekit — do not edit in the course repo; change it in coursekit and re-copy (version: see .coursekit-version)
+node_modules/
+_site/
+.DS_Store
+
+/.quarto/
+**/*.quarto_ipynb

@@ -1,0 +1,31 @@
+project:
+  type: website
+  title: "{{COURSE_TITLE}}"
+  output-dir: _site
+  render:
+    - "topics/**/*.qmd"
+    - "index.qmd"
+    - "home_content.qmd"
+
+format:
+  html:
+    toc: true
+    code-fold: false
+    theme: flatly
+    css: styles.css
+
+site:
+  navbar:
+    left:
+      - text: "Home"
+        href: index.html
+      - text: "Topics"
+        href: index.html#topics
+  # Multi-page sections outside the topic cards can get a docked sidebar, e.g.:
+  # sidebar:
+  #   - id: setup
+  #     title: "Setup"
+  #     style: "docked"
+  #     contents:
+  #       - topics/extra/setup/index.qmd
+  #       - topics/extra/setup/guide.qmd

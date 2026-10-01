@@ -1,0 +1,8 @@
+##### WEBSITE VARIABLES — use in .qmd files as {{< var name >}}
+repo_url: "{{REPO_URL}}"
+website_url: "{{SITE_URL}}"
+course_title: "{{COURSE_TITLE}}"
+
+##### COURSE VARIABLES
+# Add course links here (calendar, forms, chat, notebooks, ...) and reference them
+# with {{< var name >}} instead of hard-coding URLs in topic files.

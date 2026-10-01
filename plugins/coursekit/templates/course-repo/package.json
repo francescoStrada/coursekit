@@ -1,0 +1,13 @@
+{
+  "//": "managed by coursekit — do not edit in the course repo; change it in coursekit and re-copy (version: see .coursekit-version)",
+  "name": "coursekit-course",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "create-topic": "node scripts/create-topic.js",
+    "generate": "node scripts/generate-index.js",
+    "describe-assets": "node scripts/describe-assets.js",
+    "preview": "npm run generate && quarto preview",
+    "build": "npm run generate && quarto render"
+  }
+}

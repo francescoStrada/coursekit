@@ -1,0 +1,50 @@
+/* managed by coursekit — do not edit in the course repo; change it in coursekit and re-copy (version: see .coursekit-version) */
+/* styles.css - topic cards */
+.topics-compact {
+  margin: 0.75rem 0 2rem;
+  font-size: 0.95rem;
+  color: #444;
+}
+.topics-compact a {
+  text-decoration: none;
+  color: #2c7fb8;
+}
+.topics-compact a:hover {
+  text-decoration: underline;
+}
+.topic-card {
+  margin-bottom: 2rem;
+  padding-bottom: 1.2rem;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+}
+.topic-row {
+  display: flex;
+  align-items: flex-start;
+  gap: 1.5rem;
+  flex-wrap: wrap;
+  margin-top: 0.5rem;
+}
+.topic-buttons {
+  display: flex;
+  gap: 0.75rem;
+  min-width: 220px;
+}
+.topic-desc {
+  flex: 1;
+  min-width: 250px;
+}
+.btn {
+  display: inline-block;
+  padding: 0.55rem 1rem;
+  border-radius: 6px;
+  text-decoration: none;
+  font-weight: 600;
+  transition: 0.15s ease;
+}
+.btn-primary { background: #2c7fb8; color: white; }
+.btn-primary:hover { background: #256a9b; }
+.btn-secondary { background: #f2f4f7; color: #0b2340; border: 1px solid rgba(0,0,0,0.06); }
+.btn-secondary:hover { background: #e6ebf0; }
+@media (max-width:720px) {
+  .topic-row { flex-direction: column; }
+}

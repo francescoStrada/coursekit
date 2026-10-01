@@ -1,0 +1,16 @@
+---
+title: "{{COURSE_TITLE}}"
+format: html
+toc: false
+---
+
+<!-- Landing page intro. generate-index.js copies this file into index.qmd and appends the topic cards after it. -->
+
+{{INSTITUTION}} — A.Y. {{ACADEMIC_YEAR}}.
+
+---
+
+## Topics
+
+Each topic has two resources: **slides** used during lectures, and a **guide** for independent work. Start with the slides for orientation, and use the guide during independent work sessions.
+

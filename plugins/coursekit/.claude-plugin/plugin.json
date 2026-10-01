@@ -1,0 +1,11 @@
+{
+  "name": "coursekit",
+  "version": "0.1.0",
+  "description": "Conventions, authoring-cycle workflows, style defaults, and course-repo scaffolding for Quarto-based course material (guides + Reveal.js slides).",
+  "author": {
+    "name": "Francesco Strada"
+  },
+  "repository": "https://github.com/francescoStrada/coursekit",
+  "license": "MIT",
+  "keywords": ["course", "teaching", "quarto", "revealjs", "authoring"]
+}

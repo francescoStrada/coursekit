@@ -1,0 +1,14 @@
+{
+  "name": "coursekit",
+  "description": "Course-material authoring framework for Claude Code: Quarto guides and Reveal.js slides produced through planned, approval-gated authoring cycles.",
+  "owner": {
+    "name": "Francesco Strada"
+  },
+  "plugins": [
+    {
+      "name": "coursekit",
+      "source": "./plugins/coursekit",
+      "description": "Conventions, authoring-cycle workflows, style defaults, and course-repo scaffolding for Quarto-based course material."
+    }
+  ]
+}

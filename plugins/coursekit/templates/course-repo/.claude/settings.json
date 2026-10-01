@@ -1,0 +1,14 @@
+{
+  "extraKnownMarketplaces": {
+    "coursekit": {
+      "source": {
+        "source": "github",
+        "repo": "francescoStrada/coursekit",
+        "ref": "v{{COURSEKIT_VERSION}}"
+      }
+    }
+  },
+  "enabledPlugins": {
+    "coursekit@coursekit": true
+  }
+}
