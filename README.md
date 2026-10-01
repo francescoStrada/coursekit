@@ -70,7 +70,7 @@ Prerequisites: Claude Code, git, Node.js 18+, Quarto, and a GitHub repository fo
 1. Clone the (empty) course repository and open a terminal at its root.
 2. Declare the marketplace and the plugin for this project, pinned to a release:
    ```bash
-   claude plugin marketplace add francescoStrada/coursekit#v1.0.0 --scope project
+   claude plugin marketplace add francescoStrada/coursekit#v0.1.0 --scope project
    claude plugin install coursekit@coursekit --scope project
    ```
    This writes `.claude/settings.json`. Collaborators get the plugin after they accept the folder-trust dialog.
@@ -102,6 +102,12 @@ It also flags requests that keep recurring across rounds. The full set of opener
 ---
 
 ## Versions and upgrades
+
+**Numbering.**
+- `0.x` versions are pre-releases, used while coursekit is being tested on real courses.
+- A patch (`0.1.1`) is a fix with no change for course repos.
+- A minor bump (`0.2.0`) means structural changes: layout or skill behaviour. Check the CHANGELOG migration steps.
+- `1.0.0` marks the first consolidated, stable release. After that, a major bump means course repos need migration.
 
 There are two ways to load coursekit. The choice is made **when Claude Code starts**; a running session cannot switch.
 

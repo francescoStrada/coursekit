@@ -7,9 +7,9 @@ Every release entry has three parts:
 
 Upgrades are planned from these entries (see README → *Versions and upgrades*).
 
-## [Unreleased] — v1.0.0 candidate
+## [0.1.0] — 2026-10-01
 
-First release, extracted from the Technical Art course repo (TA-4-cinema-and-game) and revised per `AUDIT.md` §12–§15.
+First pre-release (0.x = not yet stable; tested on a new course before 1.0.0), extracted from the Technical Art course repo (TA-4-cinema-and-game) and revised per `AUDIT.md` §12–§15.
 
 ### Plugin
 
